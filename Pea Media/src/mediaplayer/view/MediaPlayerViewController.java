@@ -300,6 +300,7 @@ public class MediaPlayerViewController {
 	public void fullScreenRequestHandler()
 	{
 		main.getPrimaryStage().setFullScreen(!main.getPrimaryStage().isFullScreen());
+		toggleUI(false);
 	}
 
 	/**
@@ -370,7 +371,7 @@ public class MediaPlayerViewController {
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setFitWidth(main.getPrimaryStage().getScene().getWidth());
 			mediaPlayer.play();
-			toggleUI(false);
+
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
 			
 			/**
