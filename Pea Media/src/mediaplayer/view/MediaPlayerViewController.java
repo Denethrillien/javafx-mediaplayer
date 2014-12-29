@@ -374,32 +374,7 @@ public class MediaPlayerViewController {
 
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
 			
-			/**
-			 * Spectroscope. TODO: Extract to method or class.
-			 */
-			spectrumBox.getChildren().clear();
-			Rectangle[] bars = new Rectangle[mediaPlayer.getAudioSpectrumNumBands()];
-			for(int i = 0; i < bars.length; i++)
-			{
-				bars[i] = new Rectangle();
-				bars[i].setWidth(1);
-				bars[i].setHeight(0);
-				bars[i].setLayoutX(i + 3);
-				spectrumBox.getChildren().add(bars[i]);
-			}
-			mediaPlayer.setAudioSpectrumListener(new AudioSpectrumListener(){
-
-				@Override
-				public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
-					for(int i = 0; i < bars.length; i++)
-					{
-						bars[i].setLayoutY((spectrumBox.getHeight() / 2) - magnitudes[i]);
-						bars[i].setHeight((magnitudes[i] + 60) / 4);
-						bars[i].setFill(Color.GREEN);
-					}
-				}
-				
-			});
+			initSpectroscope();
 			
 			mediaPlayer.setOnEndOfMedia(new Runnable() 
 			{
@@ -420,6 +395,39 @@ public class MediaPlayerViewController {
 				}
 			});
 		}
+	}
+
+	/**
+	 * Creates a band-spectroscope from an anchor pane and an array of
+	 * rectangles. The number of rectangles corresponds to the number of audio
+	 * spectrum bands in media. The graph is inverted and its thickness
+	 * contingent on amplitude for better look and feel.
+	 */
+	private void initSpectroscope() 
+	{
+		spectrumBox.getChildren().clear();
+		Rectangle[] bars = new Rectangle[mediaPlayer.getAudioSpectrumNumBands()];
+		for(int i = 0; i < bars.length; i++)
+		{
+			bars[i] = new Rectangle();
+			bars[i].setWidth(1);
+			bars[i].setHeight(0);
+			bars[i].setLayoutX(i + 3);
+			spectrumBox.getChildren().add(bars[i]);
+		}
+		mediaPlayer.setAudioSpectrumListener(new AudioSpectrumListener(){
+
+			@Override
+			public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+				for(int i = 0; i < bars.length; i++)
+				{
+					bars[i].setLayoutY((spectrumBox.getHeight() / 2) - magnitudes[i]);
+					bars[i].setHeight((magnitudes[i] + 60) / 4);
+					bars[i].setFill(Color.GREEN);
+				}
+			}
+			
+		});
 	}
 	
 	/**
