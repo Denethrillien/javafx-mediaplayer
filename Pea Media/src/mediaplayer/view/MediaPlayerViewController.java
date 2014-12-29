@@ -3,16 +3,21 @@ package mediaplayer.view;
 import java.io.File;
 import java.util.List;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -30,6 +35,9 @@ import mediaplayer.util.DurationUtil;
  *
  */
 public class MediaPlayerViewController {
+	
+	private static final int HIDE_UI_TIMEOUT = 2500;
+
 	@FXML
 	private MediaView mediaView;
 	
@@ -66,6 +74,9 @@ public class MediaPlayerViewController {
 	@FXML
 	private Slider volSlider;
 	
+	@FXML
+	private VBox userControls;
+	
 	/**
 	 * A single MediaItem object.
 	 */
@@ -99,9 +110,19 @@ public class MediaPlayerViewController {
 	 */
 	private boolean repeat;
 	/**
+	 * The UI visibility flag. Initialized to <i>true</i> locally.
+	 */
+	private boolean showUI;
+	
+	/**
 	 * Reference to the main application.
 	 */
 	private Main main;
+	
+	/**
+	 * The Timeline for use as a delay timer.
+	 */
+	private Timeline timeLine;
 	
 	/**
 	 * The default constructor.
@@ -124,6 +145,7 @@ public class MediaPlayerViewController {
 		this.paused = false;
 		this.muted = false;
 		this.repeat = false;
+		this.showUI = true;
 		
 		//Adding tooltips
 		addBtn.setTooltip(new Tooltip("Open..."));
@@ -136,8 +158,11 @@ public class MediaPlayerViewController {
 		volBtn.setTooltip(new Tooltip("Toggle Mute"));
 		volSlider.setTooltip(new Tooltip("Volume"));
 		
-		progBar.setOnMouseClicked(progBarEventListener());
-		progBar.setOnMouseDragged(progBarEventListener());
+		progBar.setOnMouseClicked(progBarMouseListener());
+		progBar.setOnMouseDragged(progBarMouseListener());
+		
+		userControls.setOnMouseEntered(uIMouseInOutListener());
+		userControls.setOnMouseExited(uIMouseInOutListener());
 		
 		volSlider.setValue(0.5);
         volSlider.valueProperty().addListener(volumeSliderChangedListener());
@@ -335,6 +360,7 @@ public class MediaPlayerViewController {
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setFitWidth(main.getPrimaryStage().getScene().getWidth());
 			mediaPlayer.play();
+			toggleUI(false);
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
 			
 			mediaPlayer.setOnEndOfMedia(new Runnable() 
@@ -355,6 +381,37 @@ public class MediaPlayerViewController {
 					playAll();
 				}
 			});
+		}
+	}
+	
+	/**
+	 * Shows/hides the user interface based on a boolean value. Uses
+	 * FadeTransition to fade in/out and TimeLine to delay fade out.
+	 * 
+	 * @param show
+	 *            the boolean. True fades in controls, false fades out.
+	 */
+	private void toggleUI(boolean show) 
+	{
+		if(show)
+		{
+			showUI = !showUI;
+			FadeTransition fadeTransition = new FadeTransition(Duration.millis(200), userControls);
+			fadeTransition.setFromValue(0.0);
+			fadeTransition.setToValue(1.0);
+			fadeTransition.play();
+		}
+		else
+		{
+			timeLine = new Timeline(new KeyFrame(Duration.millis(HIDE_UI_TIMEOUT), event -> {
+				FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), userControls);
+				fadeTransition.setFromValue(1.0);
+				fadeTransition.setToValue(0.0);
+				fadeTransition.play();
+				main.getPrimaryStage().getScene().setCursor(Cursor.NONE);
+				showUI = !showUI;
+			}));
+			timeLine.play();
 		}
 	}
 	
@@ -395,10 +452,12 @@ public class MediaPlayerViewController {
 		this.main.getPrimaryStage().getScene().widthProperty().addListener(sceneSizeChangedListener());
 		
         //Listens for changes in current from playlist requests. 
-        //TODO: Move to MediaPlayerViewController
         this.main.getCurrent().addListener(currentChangedListener());
+        
+        //Listens for mouse movement
+        this.main.getPrimaryStage().getScene().setOnMouseMoved(sceneMouseMovedListener());
     }
-    
+
 	/**
 	 * Listens to changes in Main's <i>current</i>. On change, stops playback of
 	 * the currently playing item and initiates playback starting with the new
@@ -508,7 +567,7 @@ public class MediaPlayerViewController {
 	 * 
 	 * @return {@code EventHandler<MouseEvent>}
 	 */
-	private EventHandler<MouseEvent> progBarEventListener() 
+	private EventHandler<MouseEvent> progBarMouseListener() 
 	{
 		return new EventHandler<MouseEvent>()
 		{
@@ -532,5 +591,59 @@ public class MediaPlayerViewController {
         		}
         	}
         };
+	}
+	
+	/**
+	 * Listens for mouse entering and exiting the UI container. Toggles UI
+	 * visibility accordingly using <i>toggleUI()</i>
+	 * 
+	 * @return {@code EventHandler<MouseEvent>}
+	 */
+	private EventHandler<MouseEvent> uIMouseInOutListener() {
+		return new EventHandler<MouseEvent>(){
+			@Override
+			public void handle(MouseEvent event) {
+				if(mediaPlayer == null)
+				{
+					event.consume();
+				}
+				else if(event.getEventType() == MouseEvent.MOUSE_ENTERED)
+				{
+					if(timeLine != null)
+					{
+						timeLine.stop();
+					}
+					if(!showUI)
+					{
+						toggleUI(!showUI);
+					}
+				}
+				else if(event.getEventType() == MouseEvent.MOUSE_EXITED)
+				{
+					if(showUI)
+					{
+						toggleUI(!showUI);
+					}
+				}
+			}
+
+		};
+	}
+	
+	/**
+	 * Listens for mouse movement within the scene. Sets default Cursor on movement.
+	 * 
+	 * @return {@code EventHandler<MouseEvent>}
+	 */
+	private EventHandler<? super MouseEvent> sceneMouseMovedListener() {
+		return new EventHandler<MouseEvent>(){
+			@Override
+			public void handle(MouseEvent event) {
+				if(main.getPrimaryStage().getScene().getCursor() != Cursor.DEFAULT)
+				{
+					main.getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+				}
+			}
+		};
 	}
 }

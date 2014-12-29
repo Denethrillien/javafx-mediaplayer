@@ -15,7 +15,7 @@
             <MediaView fx:id="mediaView" />
          </children>
       </HBox>
-      <VBox alignment="CENTER" prefHeight="45.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <VBox fx:id="userControls" alignment="CENTER" onMouseDragReleased="#fullScreenRequestHandler" prefHeight="45.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <ProgressBar fx:id="progBar" maxHeight="10.0" maxWidth="1.7976931348623157E308" minHeight="5.0" progress="0">
                <VBox.margin>
