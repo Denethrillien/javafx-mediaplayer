@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
 <?import java.net.*?>
 <?import javafx.scene.media.*?>
 <?import javafx.geometry.*?>
@@ -15,57 +17,63 @@
             <MediaView fx:id="mediaView" />
          </children>
       </HBox>
-      <VBox fx:id="userControls" alignment="CENTER" onMouseDragReleased="#fullScreenRequestHandler" prefHeight="45.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane fx:id="userControls" layoutY="380.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <ProgressBar fx:id="progBar" maxHeight="10.0" maxWidth="1.7976931348623157E308" minHeight="5.0" progress="0">
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin></ProgressBar>
-            <GridPane>
-              <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="0.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="620.0" />
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            <AnchorPane fx:id="spectrumBox" layoutX="40.0" layoutY="15.0" prefHeight="30.0" prefWidth="128.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" />
+            <VBox alignment="CENTER" onMouseDragReleased="#fullScreenRequestHandler" prefHeight="45.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <HBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="1">
+                  <ProgressBar fx:id="progBar" maxHeight="10.0" maxWidth="1.7976931348623157E308" minHeight="5.0" progress="0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </ProgressBar>
+                  <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="0.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="620.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
                      <children>
-                        <Label fx:id="timeLabel" maxWidth="60.0" minWidth="60.0" />
-                        <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backRequestHandler" />
-                        <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playRequestHandler" />
-                        <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#nextRequestHandler" />
-                        <Button fx:id="repeatBtn" mnemonicParsing="false" onAction="#repeatRequestHandler" />
-                        <Button fx:id="pListBtn" mnemonicParsing="false" onAction="#playListRequestHandler" />
-                        <Button fx:id="volBtn" mnemonicParsing="false" onAction="#muteRequestHandler" />
-                        <Slider fx:id="volSlider" blockIncrement="0.1" majorTickUnit="0.5" max="1.0" minorTickCount="5" showTickMarks="true" value="0.5">
+                        <HBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label fx:id="timeLabel" maxWidth="60.0" minWidth="60.0" />
+                              <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backRequestHandler" />
+                              <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playRequestHandler" />
+                              <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#nextRequestHandler" />
+                              <Button fx:id="repeatBtn" mnemonicParsing="false" onAction="#repeatRequestHandler" />
+                              <Button fx:id="pListBtn" mnemonicParsing="false" onAction="#playListRequestHandler" />
+                              <Button fx:id="volBtn" mnemonicParsing="false" onAction="#muteRequestHandler" />
+                              <Slider fx:id="volSlider" blockIncrement="0.1" majorTickUnit="0.5" max="1.0" minorTickCount="5" showTickMarks="true" value="0.5">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </Slider>
+                           </children>
                            <padding>
-                              <Insets top="10.0" />
+                              <Insets bottom="5.0" top="5.0" />
                            </padding>
-                        </Slider>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </HBox>
+                        <Button fx:id="fScreenBtn" mnemonicParsing="false" onAction="#fullScreenRequestHandler" GridPane.columnIndex="2">
+                           <GridPane.margin>
+                              <Insets right="5.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Button fx:id="addBtn" mnemonicParsing="false" onAction="#openRequestHandler">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </Button>
                      </children>
-                     <padding>
-                        <Insets bottom="5.0" top="5.0" />
-                     </padding>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </HBox>
-                  <Button fx:id="fScreenBtn" mnemonicParsing="false" onAction="#fullScreenRequestHandler" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets right="5.0" />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="addBtn" mnemonicParsing="false" onAction="#openRequestHandler">
-                     <GridPane.margin>
-                        <Insets left="5.0" />
-                     </GridPane.margin>
-                  </Button>
+                  </GridPane>
                </children>
-            </GridPane>
+            </VBox>
          </children>
-      </VBox>
+      </AnchorPane>
    </children>
 </AnchorPane>

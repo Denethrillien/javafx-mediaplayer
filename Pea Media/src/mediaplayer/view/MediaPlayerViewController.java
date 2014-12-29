@@ -11,16 +11,23 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import mediaplayer.Main;
@@ -75,7 +82,10 @@ public class MediaPlayerViewController {
 	private Slider volSlider;
 	
 	@FXML
-	private VBox userControls;
+	private AnchorPane userControls;
+	
+	@FXML
+	private AnchorPane spectrumBox;
 	
 	/**
 	 * A single MediaItem object.
@@ -362,6 +372,33 @@ public class MediaPlayerViewController {
 			mediaPlayer.play();
 			toggleUI(false);
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
+			
+			/**
+			 * Spectroscope. TODO: Extract to method or class.
+			 */
+			spectrumBox.getChildren().clear();
+			Rectangle[] bars = new Rectangle[mediaPlayer.getAudioSpectrumNumBands()];
+			for(int i = 0; i < bars.length; i++)
+			{
+				bars[i] = new Rectangle();
+				bars[i].setWidth(1);
+				bars[i].setHeight(0);
+				bars[i].setLayoutX(i + 3);
+				spectrumBox.getChildren().add(bars[i]);
+			}
+			mediaPlayer.setAudioSpectrumListener(new AudioSpectrumListener(){
+
+				@Override
+				public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+					for(int i = 0; i < bars.length; i++)
+					{
+						bars[i].setLayoutY((spectrumBox.getHeight() / 2) - magnitudes[i]);
+						bars[i].setHeight((magnitudes[i] + 60) / 4);
+						bars[i].setFill(Color.GREEN);
+					}
+				}
+				
+			});
 			
 			mediaPlayer.setOnEndOfMedia(new Runnable() 
 			{
