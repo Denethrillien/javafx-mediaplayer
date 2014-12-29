@@ -1,0 +1,211 @@
+.background {
+    -fx-background-color: #000000;
+}
+
+.label {
+    -fx-font-size: 11pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+    -fx-opacity: 0.6;
+}
+
+.progress-bar .bar { 
+    -fx-padding: 0px; 
+    -fx-background-insets: 0; 
+    -fx-accent: #5ff000;
+}
+
+.progress-bar > .track {
+  -fx-background-color: derive(#000000, 20%);
+}
+
+.slider > .track{
+	-fx-background-color: derive(#000000, 20%);
+}
+
+.slider > .thumb{
+	-fx-background-color: derive(#000000, 20%);
+	-fx-padding: 4pt;
+	-fx-border-radius: 5pt;
+	-fx-border-color: derive(#000000, 10%);
+	-fx-border-width: 1pt;
+}
+
+.slider > .thumb:hover{
+	-fx-border-color: linear-gradient(from 25% 25% to 100% 100%, #5ff000, #00ff00);
+}
+
+.slider .axis .axis-tick-mark, .slider .axis .axis-minor-tick-mark {
+    -fx-fill: null;
+    -fx-stroke: #5ff000;
+}
+
+.label-bright {
+    -fx-font-size: 11pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+.label-header {
+    -fx-font-size: 32pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+.menu-bar {
+    -fx-background-color: derive(#1d1d1d,20%);
+}
+
+.context-menu {
+    -fx-background-color: derive(#1d1d1d,50%);
+}
+
+.menu-bar .label {
+    -fx-font-size: 11pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: #5ff000;
+    -fx-opacity: 0.9;
+}
+
+.menu:hover{
+	-fx-background-color: black;
+}
+
+.menu .left-container {
+    -fx-background-color: black;
+}
+
+.table-view {
+    -fx-base: #1d1d1d;
+    -fx-control-inner-background: #1d1d1d;
+    -fx-background-color: #1d1d1d;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-padding: 5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-size: 35;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: transparent;
+    -fx-border-color: 
+        transparent
+        transparent
+        derive(-fx-base, 80%) 
+        transparent;
+    -fx-border-insets: 0 10 1 0;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 20pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-opacity: 1;
+}
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: #5ff000;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-border-color: transparent #1d1d1d transparent #1d1d1d;
+    -fx-background-color: transparent, derive(#1d1d1d,20%);
+}
+
+.split-pane {
+    -fx-padding: 1 0 0 0;
+}
+
+
+
+/*-------------------Buttons--------------------*/
+.button {
+    -fx-padding: 1 1 1 1;  
+    -fx-border-color: #3a3a3a; 
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-background-color: #000000;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #d8d8d8;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.button:hover {
+    -fx-border-color: linear-gradient(from 25% 25% to 100% 100%, #5ff000, #00ff00);
+    -fx-border-width: 2;
+}
+
+.button:pressed, .button:default:hover:pressed {
+  -fx-background-color: #1d1d1d;
+  -fx-text-fill: #1d1d1d;
+}
+
+.button:disabled, .button:default:disabled {
+    -fx-opacity: 0.4;
+    -fx-background-color: #1d1d1d;
+    -fx-text-fill: white;
+}
+
+.button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30%);
+}
+
+#addBtn{
+	-fx-graphic: url('file:resources/images/openbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#backBtn{
+	-fx-graphic: url('file:resources/images/bckbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+/* 
+ * This is the initial style for the Play button. Style changes to reflect 
+ * play/pause functionality implemented in controller.
+ */
+#playBtn{
+	-fx-graphic: url('file:resources/images/playbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#nextBtn{
+	-fx-graphic: url('file:resources/images/fwdbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#repeatBtn{
+	-fx-graphic: url('file:resources/images/repeatbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#pListBtn{
+	-fx-graphic: url('file:resources/images/plistbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#fScreenBtn{
+	-fx-graphic: url('file:resources/images/scrnbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#volBtn{
+	-fx-graphic: url('file:resources/images/halfvolbtn.png');
+	-fx-padding: 2 4 2 4;
+}
+
+#timeLabel{
+	-fx-text-fill: #5ff000;
+}
