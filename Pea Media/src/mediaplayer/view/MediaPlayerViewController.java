@@ -95,6 +95,10 @@ public class MediaPlayerViewController {
 	 */
 	private boolean muted;
 	/**
+	 * The media repeat flag. Initialized to <i>false</i> locally.
+	 */
+	private boolean repeat;
+	/**
 	 * Reference to the main application.
 	 */
 	private Main main;
@@ -119,6 +123,7 @@ public class MediaPlayerViewController {
 		this.playing = false;
 		this.paused = false;
 		this.muted = false;
+		this.repeat = false;
 		
 		//Adding tooltips
 		addBtn.setTooltip(new Tooltip("Open..."));
@@ -233,6 +238,26 @@ public class MediaPlayerViewController {
 	}
 	
 	/**
+	 * Handles the <i>Repeat</i> button click. Toggles the repeat flag.
+	 */
+	@FXML
+	public void repeatRequestHandler()
+	{
+		if(mediaPlayer != null)
+		{
+			repeat = !repeat;
+			if(repeat)
+			{
+				repeatBtn.setStyle("-fx-graphic: url('file:resources/images/repeatonebtn.png'); -fx-padding: 2 4 2 4;");
+			}
+			else
+			{
+				repeatBtn.setStyle("-fx-graphic: url('file:resources/images/repeatbtn.png'); -fx-padding: 2 4 2 4;");
+			}
+		}
+	}
+	
+	/**
 	 * Handles the <i>Fullscreen</i> button click. Each click reverses the
 	 * current fullscreen status of the primary stage.
 	 */
@@ -318,7 +343,10 @@ public class MediaPlayerViewController {
 				public void run()
 				{
 					mediaPlayer.stop();
-					current++;
+					if(!repeat)
+					{
+						current++;
+					}
 					main.getCurrent().set(current);
 					if(current == playList.size())
 					{

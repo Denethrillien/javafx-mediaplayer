@@ -37,7 +37,7 @@
                         <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backRequestHandler" />
                         <Button fx:id="playBtn" mnemonicParsing="false" onAction="#playRequestHandler" />
                         <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#nextRequestHandler" />
-                        <Button fx:id="repeatBtn" mnemonicParsing="false" />
+                        <Button fx:id="repeatBtn" mnemonicParsing="false" onAction="#repeatRequestHandler" />
                         <Button fx:id="pListBtn" mnemonicParsing="false" onAction="#playListRequestHandler" />
                         <Button fx:id="volBtn" mnemonicParsing="false" onAction="#muteRequestHandler" />
                         <Slider fx:id="volSlider" blockIncrement="0.1" majorTickUnit="0.5" max="1.0" minorTickCount="5" showTickMarks="true" value="0.5">
