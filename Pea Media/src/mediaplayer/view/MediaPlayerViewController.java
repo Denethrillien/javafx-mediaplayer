@@ -516,7 +516,10 @@ public class MediaPlayerViewController {
 							ObservableValue<? extends Number> observableValue,
 							Number oldSceneWidth, Number newSceneWidth) 
 					{
-						mediaPlayer.stop();
+						if(mediaPlayer != null)
+						{
+							mediaPlayer.stop();
+						}
 						current = main.getCurrent().get();
 						playAll();
 					}
