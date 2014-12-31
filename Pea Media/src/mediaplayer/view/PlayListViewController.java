@@ -80,42 +80,8 @@ public class PlayListViewController
         
         playListTable.setOnMouseClicked(playListTableDoubleClickListener());
         
-        playListTable.setOnDragOver(new EventHandler<DragEvent>() 
-        {
-            @Override
-            public void handle(DragEvent event) 
-            {
-                Dragboard db = event.getDragboard();
-                if (db.hasFiles()) 
-                {
-                    event.acceptTransferModes(TransferMode.COPY);
-                } 
-                else 
-                {
-                    event.consume();
-                }
-            }
-        });
-
-        playListTable.setOnDragDropped(new EventHandler<DragEvent>()
-        {
-            @Override
-            public void handle(DragEvent event) 
-            {
-                Dragboard db = event.getDragboard();
-                if (db.hasFiles()) 
-                {
-                    for (File file : db.getFiles()) 
-                    {
-                        MediaItem track = new MediaItem(file.getAbsolutePath());
-                        track.setURI(file.toURI());
-                        track.setTitle(file.getName());
-                        main.getPlayList().add(track);
-                    }
-                }
-                event.consume();
-            }
-        });
+        playListTable.setOnDragOver(playListFileDropListener());
+        playListTable.setOnDragDropped(playListFileDropListener());
     }
     
     /**
@@ -210,6 +176,45 @@ public class PlayListViewController
 							playListTable.getSelectionModel()
 									.selectedIndexProperty().get());
             	}
+            }
+        };
+	}
+	
+	/**
+	 * Listens for and reacts to {@link DragEvent}s. 
+	 * 
+	 * @return {@code EventHandler<DragEvent>}
+	 */
+	private EventHandler<DragEvent> playListFileDropListener() {
+		return new EventHandler<DragEvent>() 
+        {
+            @Override
+            public void handle(DragEvent event) 
+            {
+                Dragboard db = event.getDragboard();
+                if(event.getEventType() == DragEvent.DRAG_OVER){
+                	if (db.hasFiles()) 
+                    {
+                        event.acceptTransferModes(TransferMode.COPY);
+                    } 
+                }
+                else if(event.getEventType() == DragEvent.DRAG_DROPPED)
+                {
+                	if (db.hasFiles()) 
+                    {
+                        for (File file : db.getFiles()) 
+                        {
+                            MediaItem track = new MediaItem(file.getAbsolutePath());
+                            track.setURI(file.toURI());
+                            track.setTitle(file.getName());
+                            main.getPlayList().add(track);
+                        }
+                    }
+                }
+                else 
+                {
+                    event.consume();
+                }
             }
         };
 	}
