@@ -11,8 +11,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -20,8 +18,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -32,7 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import mediaplayer.Main;
 import mediaplayer.model.MediaItem;
-import mediaplayer.util.DurationUtil;
+import mediaplayer.util.ConversionUtils;
  
 /**
  * The Controller for the MediaPlayerView. Contains the UI functionality and
@@ -225,7 +221,7 @@ public class MediaPlayerViewController {
 			for(File f : files)
 			{
 				mediaItem = new MediaItem(f.getAbsolutePath());
-				mediaItem.setTitle(formatFileName(f.getName()));
+				mediaItem.setTitle(ConversionUtils.removeFileExtension(f.getName()));
 				mediaItem.setURI(f.toURI());
 				main.getPlayList().add(mediaItem);
 				
@@ -461,28 +457,6 @@ public class MediaPlayerViewController {
 		}
 	}
 	
-	//TODO: Move to a helper class
-	public static String formatFileName(String s) {
-
-	    String separator = System.getProperty("file.separator");
-	    String filename;
-
-	    // Remove the path upto the filename.
-	    int lastSeparatorIndex = s.lastIndexOf(separator);
-	    if (lastSeparatorIndex == -1) {
-	        filename = s;
-	    } else {
-	        filename = s.substring(lastSeparatorIndex + 1);
-	    }
-
-	    // Remove the extension.
-	    int extensionIndex = filename.lastIndexOf(".");
-	    if (extensionIndex == -1)
-	        return filename;
-
-	    return filename.substring(0, extensionIndex);
-	}
-	
 	/**
 	 * Invoked by the main app to give it a reference back to itself. Adds
 	 * listeners contingent on main being set.
@@ -520,7 +494,10 @@ public class MediaPlayerViewController {
 							ObservableValue<? extends Number> observableValue,
 							Number oldSceneWidth, Number newSceneWidth) 
 					{
-						mediaPlayer.stop();
+						if(mediaPlayer != null)
+						{
+							mediaPlayer.stop();
+						}
 						current = main.getCurrent().get();
 						playAll();
 					}
@@ -601,7 +578,7 @@ public class MediaPlayerViewController {
 						* mediaPlayer.getCurrentTime().toMillis()
 						/ mediaPlayer.getTotalDuration().toMillis());
 
-				timeLabel.setText(DurationUtil.format((int)newValue.toSeconds()));
+				timeLabel.setText(ConversionUtils.formatTimeInSeconds((int)newValue.toSeconds()));
 			}
 		};
 		return progressChangeListener;
