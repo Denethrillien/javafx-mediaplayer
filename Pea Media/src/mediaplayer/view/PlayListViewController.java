@@ -1,13 +1,18 @@
 package mediaplayer.view;
 
+import java.io.File;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import mediaplayer.Main;
 import mediaplayer.model.MediaItem;
@@ -74,6 +79,9 @@ public class PlayListViewController
                 (observable, oldValue, newValue) -> showMediaInfo(newValue));
         
         playListTable.setOnMouseClicked(playListTableDoubleClickListener());
+        
+        playListTable.setOnDragOver(playListFileDropListener());
+        playListTable.setOnDragDropped(playListFileDropListener());
     }
     
     /**
@@ -120,7 +128,7 @@ public class PlayListViewController
 
         // Add observable list data to the table
         playListTable.setItems(main.getPlayList());
-        playListTable.getSelectionModel().select(main.getCurrent().get());;
+        playListTable.getSelectionModel().select(main.getCurrent().get());
     }
 	
 	/**
@@ -168,6 +176,45 @@ public class PlayListViewController
 							playListTable.getSelectionModel()
 									.selectedIndexProperty().get());
             	}
+            }
+        };
+	}
+	
+	/**
+	 * Listens for and reacts to {@link DragEvent}s. 
+	 * 
+	 * @return {@code EventHandler<DragEvent>}
+	 */
+	private EventHandler<DragEvent> playListFileDropListener() {
+		return new EventHandler<DragEvent>() 
+        {
+            @Override
+            public void handle(DragEvent event) 
+            {
+                Dragboard db = event.getDragboard();
+                if(event.getEventType() == DragEvent.DRAG_OVER){
+                	if (db.hasFiles()) 
+                    {
+                        event.acceptTransferModes(TransferMode.COPY);
+                    } 
+                }
+                else if(event.getEventType() == DragEvent.DRAG_DROPPED)
+                {
+                	if (db.hasFiles()) 
+                    {
+                        for (File file : db.getFiles()) 
+                        {
+                            MediaItem track = new MediaItem(file.getAbsolutePath());
+                            track.setURI(file.toURI());
+                            track.setTitle(file.getName());
+                            main.getPlayList().add(track);
+                        }
+                    }
+                }
+                else 
+                {
+                    event.consume();
+                }
             }
         };
 	}
