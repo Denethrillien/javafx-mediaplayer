@@ -53,7 +53,7 @@ public class Main extends Application {
 	{
 		this.current = new SimpleIntegerProperty(0);
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Pea Media Player v0.7");
+        this.primaryStage.setTitle("Pea Media Player v0.75");
 
         initRootLayout();
         showMediaPlayerView();
@@ -121,7 +121,7 @@ public class Main extends Application {
 
 	        // Create the dialog Stage.
 	        Stage playListStage = new Stage();
-	        playListStage.setTitle("Pea Media Player v0.7 > Playlist");
+	        playListStage.setTitle("Pea Media Player v0.75 >>> Playlist");
 	        playListStage.initModality(Modality.WINDOW_MODAL);
 	        playListStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);

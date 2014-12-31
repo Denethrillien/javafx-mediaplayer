@@ -28,7 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import mediaplayer.Main;
 import mediaplayer.model.MediaItem;
-import mediaplayer.util.DurationUtil;
+import mediaplayer.util.ConversionUtils;
  
 /**
  * The Controller for the MediaPlayerView. Contains the UI functionality and
@@ -221,7 +221,7 @@ public class MediaPlayerViewController {
 			for(File f : files)
 			{
 				mediaItem = new MediaItem(f.getAbsolutePath());
-				mediaItem.setTitle(formatFileName(f.getName()));
+				mediaItem.setTitle(ConversionUtils.removeFileExtension(f.getName()));
 				mediaItem.setURI(f.toURI());
 				main.getPlayList().add(mediaItem);
 				
@@ -457,28 +457,6 @@ public class MediaPlayerViewController {
 		}
 	}
 	
-	//TODO: Move to a helper class
-	public static String formatFileName(String s) {
-
-	    String separator = System.getProperty("file.separator");
-	    String filename;
-
-	    // Remove the path upto the filename.
-	    int lastSeparatorIndex = s.lastIndexOf(separator);
-	    if (lastSeparatorIndex == -1) {
-	        filename = s;
-	    } else {
-	        filename = s.substring(lastSeparatorIndex + 1);
-	    }
-
-	    // Remove the extension.
-	    int extensionIndex = filename.lastIndexOf(".");
-	    if (extensionIndex == -1)
-	        return filename;
-
-	    return filename.substring(0, extensionIndex);
-	}
-	
 	/**
 	 * Invoked by the main app to give it a reference back to itself. Adds
 	 * listeners contingent on main being set.
@@ -600,7 +578,7 @@ public class MediaPlayerViewController {
 						* mediaPlayer.getCurrentTime().toMillis()
 						/ mediaPlayer.getTotalDuration().toMillis());
 
-				timeLabel.setText(DurationUtil.format((int)newValue.toSeconds()));
+				timeLabel.setText(ConversionUtils.formatTimeInSeconds((int)newValue.toSeconds()));
 			}
 		};
 		return progressChangeListener;
