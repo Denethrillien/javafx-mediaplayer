@@ -40,6 +40,9 @@ import mediaplayer.util.ConversionUtils;
 public class MediaPlayerViewController {
 	
 	private static final int HIDE_UI_TIMEOUT = 2500;
+	private static final boolean SHOW_UI = true;
+	private static final boolean HIDE_UI = false;
+	private static final String[] MUSIC = {".mp3", ".wav"};
 
 	@FXML
 	private MediaView mediaView;
@@ -119,6 +122,10 @@ public class MediaPlayerViewController {
 	 * The UI visibility flag. Initialized to <i>true</i> locally.
 	 */
 	private boolean showUI;
+	/**
+	 * The music flag. Initialized to <i>true</i> locally.
+	 */
+	private boolean music;
 	
 	/**
 	 * Reference to the main application.
@@ -152,6 +159,7 @@ public class MediaPlayerViewController {
 		this.muted = false;
 		this.repeat = false;
 		this.showUI = true;
+		this.music = true;
 		
 		//Adding tooltips
 		addBtn.setTooltip(new Tooltip("Open..."));
@@ -296,7 +304,6 @@ public class MediaPlayerViewController {
 	public void fullScreenRequestHandler()
 	{
 		main.getPrimaryStage().setFullScreen(!main.getPrimaryStage().isFullScreen());
-		toggleUI(false);
 	}
 
 	/**
@@ -366,6 +373,22 @@ public class MediaPlayerViewController {
 			mediaPlayer.setVolume(volSlider.getValue());
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setFitWidth(main.getPrimaryStage().getScene().getWidth());
+			
+			for (String s : MUSIC) 
+			{
+				if (s.equalsIgnoreCase(ConversionUtils.convertToFileExtension(playList
+						.get(current).getURI()))) 
+				{
+					this.music = true;
+					break;
+				}
+				else
+				{
+					this.music = false;
+				}
+			}
+			if(!music) toggleUI(HIDE_UI);
+
 			mediaPlayer.play();
 
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
@@ -435,25 +458,33 @@ public class MediaPlayerViewController {
 	 */
 	private void toggleUI(boolean show) 
 	{
-		if(show)
+		if (!music) 
 		{
-			showUI = true;
-			FadeTransition fadeTransition = new FadeTransition(Duration.millis(200), userControls);
-			fadeTransition.setFromValue(0.0);
-			fadeTransition.setToValue(1.0);
-			fadeTransition.play();
-		}
-		else
-		{
-			timeLine = new Timeline(new KeyFrame(Duration.millis(HIDE_UI_TIMEOUT), event -> {
-				FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), userControls);
-				fadeTransition.setFromValue(1.0);
-				fadeTransition.setToValue(0.0);
+			if (show) 
+			{
+				showUI = SHOW_UI;
+				FadeTransition fadeTransition = new FadeTransition(
+						Duration.millis(200), userControls);
+				fadeTransition.setFromValue(0.0);
+				fadeTransition.setToValue(1.0);
 				fadeTransition.play();
-				main.getPrimaryStage().getScene().setCursor(Cursor.NONE);
-				showUI = false;
-			}));
-			timeLine.play();
+			} 
+			else 
+			{
+				timeLine = new Timeline(new KeyFrame(
+						Duration.millis(HIDE_UI_TIMEOUT), event -> 
+						{
+							FadeTransition fadeTransition = new FadeTransition(
+									Duration.millis(500), userControls);
+							fadeTransition.setFromValue(1.0);
+							fadeTransition.setToValue(0.0);
+							fadeTransition.play();
+							main.getPrimaryStage().getScene()
+									.setCursor(Cursor.NONE);
+							showUI = HIDE_UI;
+						}));
+				timeLine.play();
+			}
 		}
 	}
 	
@@ -638,14 +669,14 @@ public class MediaPlayerViewController {
 					}
 					if(!showUI)
 					{
-						toggleUI(true);
+						toggleUI(SHOW_UI);
 					}
 				}
 				else if(event.getEventType() == MouseEvent.MOUSE_EXITED)
 				{
 					if(showUI)
 					{
-						toggleUI(false);
+						toggleUI(HIDE_UI);
 					}
 				}
 			}
