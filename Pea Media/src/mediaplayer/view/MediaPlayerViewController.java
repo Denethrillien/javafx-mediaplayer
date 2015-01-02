@@ -380,6 +380,7 @@ public class MediaPlayerViewController {
 						.get(current).getURI()))) 
 				{
 					this.music = true;
+					initSpectroscope();
 					break;
 				}
 				else
@@ -392,8 +393,6 @@ public class MediaPlayerViewController {
 			mediaPlayer.play();
 
 			mediaPlayer.currentTimeProperty().addListener(progressChangedListener());
-			
-			initSpectroscope();
 			
 			mediaPlayer.setOnEndOfMedia(new Runnable() 
 			{
