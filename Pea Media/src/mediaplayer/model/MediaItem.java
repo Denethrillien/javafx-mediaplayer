@@ -15,12 +15,7 @@ import javafx.beans.property.StringProperty;
  *
  */
 public class MediaItem 
-{
-	/**
-	 * The observable absolutePath value of the media file.
-	 */
-	private final StringProperty path;
-	
+{	
 	/**
 	 * The observable name value of the media file. TODO: Get title from
 	 * metadata.
@@ -46,43 +41,11 @@ public class MediaItem
 	 * @param path
 	 *            the String representation of the absolute path to media file.
 	 */
-	public MediaItem(String path) 
-	{
-		this.path = new SimpleStringProperty(path);	
+	public MediaItem(URI uri) 
+	{	
 		this.title = new SimpleStringProperty("");
-		this.uri = new SimpleObjectProperty<URI>();
+		this.uri = new SimpleObjectProperty<URI>(uri);
 	} //end ctor
-	
-	/**
-	 * Returns the path String of the MediaItem.
-	 * 
-	 * @return path String.
-	 */
-	public String getPath()
-	{
-		return path.get();
-	}
-	
-	/**
-	 * Sets the path of the MediaItem.
-	 * 
-	 * @param path
-	 *            the String representation of the absolute path to media file.
-	 */
-	public void setPath(String path)
-	{
-		this.path.set(path);
-	}
-	
-	/**
-	 * Returns the path StringProperty of the MediaItem.
-	 * 
-	 * @return path StringProperty.
-	 */
-	public StringProperty getPathProperty()
-	{
-		return path;
-	}
 	
 	/**
 	 * Returns the title String of the MediaItem.

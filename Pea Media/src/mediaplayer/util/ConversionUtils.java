@@ -65,7 +65,7 @@ public class ConversionUtils {
 	}
 	
 	/**
-	 * Gets the file extension from the filename.
+	 * Gets the file extension as String from the filename.
 	 * 
 	 * @param uri
 	 *            the URI to be converted.

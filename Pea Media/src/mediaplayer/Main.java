@@ -26,8 +26,8 @@ import javafx.stage.Stage;
  * @author Alex Hage
  *
  */
-public class Main extends Application {
-
+public class Main extends Application 
+{
 	/**
 	 * The main stage of the application.
 	 */
@@ -147,7 +147,8 @@ public class Main extends Application {
 	 * 
 	 * @return primaryStage the Stage to return.
 	 */
-    public Stage getPrimaryStage() {
+    public Stage getPrimaryStage() 
+    {
         return primaryStage;
     }
     
@@ -187,7 +188,8 @@ public class Main extends Application {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		launch(args);
 	}
 }

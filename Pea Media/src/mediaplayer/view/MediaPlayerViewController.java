@@ -42,7 +42,7 @@ public class MediaPlayerViewController {
 	private static final int HIDE_UI_TIMEOUT = 2500;
 	private static final boolean SHOW_UI = true;
 	private static final boolean HIDE_UI = false;
-	private static final String[] MUSIC = {".mp3", ".wav"};
+	private static final String[] MUSIC = {".MP3", ".WAV"};
 
 	@FXML
 	private MediaView mediaView;
@@ -228,9 +228,8 @@ public class MediaPlayerViewController {
 		{
 			for(File f : files)
 			{
-				mediaItem = new MediaItem(f.getAbsolutePath());
+				mediaItem = new MediaItem(f.toURI());
 				mediaItem.setTitle(ConversionUtils.convertToFileName((f.toURI())));
-				mediaItem.setURI(f.toURI());
 				main.getPlayList().add(mediaItem);
 				
 				System.out.println("Added " + f.getName() + " to playlist");

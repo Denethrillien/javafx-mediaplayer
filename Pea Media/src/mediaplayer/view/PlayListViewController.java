@@ -16,6 +16,7 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import mediaplayer.Main;
 import mediaplayer.model.MediaItem;
+import mediaplayer.util.ConversionUtils;
 
 /**
  * The controller for the PlayListView. Contains playlist item selection and
@@ -107,7 +108,7 @@ public class PlayListViewController
         if (track != null) 
         {
             // Fill the labels with info from the Track object.
-        	pathLabel.setText(track.getPath());
+        	pathLabel.setText(ConversionUtils.convertToFileName(track.getURI()));
         	titleLabel.setText(track.getTitle());
         } 
         else 
@@ -185,7 +186,8 @@ public class PlayListViewController
 	 * 
 	 * @return {@code EventHandler<DragEvent>}
 	 */
-	private EventHandler<DragEvent> playListFileDropListener() {
+	private EventHandler<DragEvent> playListFileDropListener() 
+	{
 		return new EventHandler<DragEvent>() 
         {
             @Override
@@ -204,7 +206,7 @@ public class PlayListViewController
                     {
                         for (File file : db.getFiles()) 
                         {
-                            MediaItem track = new MediaItem(file.getAbsolutePath());
+                            MediaItem track = new MediaItem(file.toURI());
                             track.setURI(file.toURI());
                             track.setTitle(file.getName());
                             main.getPlayList().add(track);
