@@ -221,7 +221,7 @@ public class MediaPlayerViewController {
 			for(File f : files)
 			{
 				mediaItem = new MediaItem(f.getAbsolutePath());
-				mediaItem.setTitle(ConversionUtils.removeFileExtension(f.getName()));
+				mediaItem.setTitle(ConversionUtils.convertToFileName((f.toURI())));
 				mediaItem.setURI(f.toURI());
 				main.getPlayList().add(mediaItem);
 				
@@ -437,7 +437,7 @@ public class MediaPlayerViewController {
 	{
 		if(show)
 		{
-			showUI = !showUI;
+			showUI = true;
 			FadeTransition fadeTransition = new FadeTransition(Duration.millis(200), userControls);
 			fadeTransition.setFromValue(0.0);
 			fadeTransition.setToValue(1.0);
@@ -451,7 +451,7 @@ public class MediaPlayerViewController {
 				fadeTransition.setToValue(0.0);
 				fadeTransition.play();
 				main.getPrimaryStage().getScene().setCursor(Cursor.NONE);
-				showUI = !showUI;
+				showUI = false;
 			}));
 			timeLine.play();
 		}
@@ -578,7 +578,7 @@ public class MediaPlayerViewController {
 						* mediaPlayer.getCurrentTime().toMillis()
 						/ mediaPlayer.getTotalDuration().toMillis());
 
-				timeLabel.setText(ConversionUtils.formatTimeInSeconds((int)newValue.toSeconds()));
+				timeLabel.setText(ConversionUtils.convertTimeInSeconds((int)newValue.toSeconds()));
 			}
 		};
 		return progressChangeListener;
@@ -638,14 +638,14 @@ public class MediaPlayerViewController {
 					}
 					if(!showUI)
 					{
-						toggleUI(!showUI);
+						toggleUI(true);
 					}
 				}
 				else if(event.getEventType() == MouseEvent.MOUSE_EXITED)
 				{
 					if(showUI)
 					{
-						toggleUI(!showUI);
+						toggleUI(false);
 					}
 				}
 			}

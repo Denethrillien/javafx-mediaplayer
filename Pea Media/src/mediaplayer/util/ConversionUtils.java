@@ -1,5 +1,7 @@
 package mediaplayer.util;
 
+import java.net.URI;
+
 /**
  * Provides conversion tools.
  * 
@@ -14,7 +16,7 @@ public class ConversionUtils {
 	 *            the time in seconds to format.
 	 * @return outTime formatted time as String.
 	 */
-    public static String formatTimeInSeconds(int inTime)
+    public static String convertTimeInSeconds(int inTime)
     {
     	String outTime = "";
     	
@@ -29,14 +31,17 @@ public class ConversionUtils {
 		return outTime;
     }
     
-    /**
-     * Removes the file extension from the filename.
-     * @param s
-     * @return
-     */
-	public static String removeFileExtension(String oldName) {
+	/**
+	 * Removes the file extension from the filename.
+	 * 
+	 * @param oldName
+	 *            the URI to be converted.
+	 * @return newName a trimmed substring containing only the filename.
+	 */
+	public static String convertToFileName(URI uri) {
 
-	    String separator = System.getProperty("file.separator");
+	    char separator = '/';
+	    String oldName = uri.toString().replace("%20", " ");
 	    String newName;
 
 	    // Remove everything before the last separator. Effectively removes path/URL
@@ -58,4 +63,26 @@ public class ConversionUtils {
 	    //Remove extension.
 	    return newName.substring(0, extensionIndex);
 	}
+	
+	/**
+	 * Gets the file extension from the filename.
+	 * 
+	 * @param uri
+	 *            the URI to be converted.
+	 * @return uriString a trimmed file extension.
+	 */
+	public static String convertToFileExtension(URI uri) {
+
+	    String uriString = uri.toString();
+
+	    int extensionIndex = uriString.lastIndexOf(".");
+	    //No extension
+	    if (extensionIndex == -1)
+	    {
+	        return null;
+	    }
+	    //Return extension.
+	    return uriString.substring(extensionIndex);
+	}
 }
+
